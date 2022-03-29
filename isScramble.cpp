@@ -31,31 +31,57 @@
 // 返回 true。
 
 #include <string>
+#include <unordered_map>
+#include <algorithm>
 
+using std::unordered_map;
 using std::string;
 
-class Solution {
+class Solution 
+{
+private:
+    string s1,s2;
 public:
     //解法超出时间限制
-    bool isScramble(string s1, string s2) 
+    // bool isScramble(string s1, string s2) 
+    // {
+    //     int l1=s1.length(),l2=s2.length();
+    //     if (l1 != l2) return false;
+    //     if (l1==1 && s1==s2) return true;
+    //     for (int i=1; i<l1; ++i)
+    //     {
+    //         //前半部分长度 i，后半部分长度l-i
+    //         //判断s1的前半部分和s2的前半部分以及s1的后半部分和s2的后半部分是否交错
+    //         if (isScramble(s1.substr(0,i),s2.substr(0,i)) && isScramble(s1.substr(i,l1-i),s2.substr(i,l2-i)))
+    //         {
+    //             return true;
+    //         }
+    //         //判断s1的前半部分和s2的后半部分以及s1的后半部分和s2的前半部分是否交错
+    //         if (isScramble(s1.substr(0,i),s2.substr(l2-i,i)) && isScramble(s1.substr(i,l1-i),s2.substr(0,l2-i)))
+    //         {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
+
+    //分析s1从位置l1长度为length的子字符串和s2从位置l2开始长度为length的子字符串是否具有相同的元素
+    bool check_if_similar(int l1, int l2, int length)
     {
-        int l1=s1.length(),l2=s2.length();
-        if (l1 != l2) return false;
-        if (l1==1 && s1==s2) return true;
-        for (int i=1; i<l1; ++i)
+        unordered_map<int,int> freq;
+        for (int i=l1; i<l1+length; ++i)
         {
-            //前半部分长度 i，后半部分长度l-i
-            //判断s1的前半部分和s2的前半部分以及s1的后半部分和s2的后半部分是否交错
-            if (isScramble(s1.substr(0,i),s2.substr(0,i)) && isScramble(s1.substr(i,l1-i),s2.substr(i,l2-i)))
-            {
-                return true;
-            }
-            //判断s1的前半部分和s2的后半部分以及s1的后半部分和s2的前半部分是否交错
-            if (isScramble(s1.substr(0,i),s2.substr(l2-i,i)) && isScramble(s1.substr(i,l1-i),s2.substr(0,l2-i)))
-            {
-                return true;
-            }
+            freq[s1[i]]++;
         }
-        return false;
+        for (int j=l2; j<l2+length; ++j)
+        {
+            freq[s2[j]]--;
+        }
+        //一元谓词：lambda函数：[] (const auto & entry) {return entry.second() != 0;})
+        if (std::any_of(freq.begin(),freq.end(),[] (const auto & entry) {return entry.second() != 0;}))
+        {
+            return false;
+        }
+        return true;
     }
 };
