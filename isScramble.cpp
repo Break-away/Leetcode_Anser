@@ -40,6 +40,7 @@ using std::string;
 class Solution 
 {
 private:
+    int memo[30][30][31]; //记忆化搜索存储状态的数组，-1表示未false，1表示true，0表示未计算
     string s1,s2;
 public:
     //解法超出时间限制
@@ -83,5 +84,55 @@ public:
             return false;
         }
         return true;
+    }
+
+    //检索字符串是否属于扰乱字符串
+    bool dfs(int l1, int l2, int lenght)  //l代表location
+    {
+        //检查记忆化数组中是否存储有当前搜索字符串的状态
+        if(memo[l1][l2][lenght])  //如果memo[l1][l2][lenght]为非0，判断为真，则表示已经存储有当前字符串的状态，返回结果即可
+        {
+            return memo[l1][l2][lenght]==1;
+        }
+        //如果比较的两个子串相等，这一定是扰乱字符串
+        if(s1.substr(l1,lenght) == s2.substr(l2,lenght))
+        {
+            memo[l1][l2][lenght]=1;
+            return true;
+        }
+        //判断两个子串是否具有相同的元素，如果元素不同，则一定不是扰乱字符串
+        if (!check_if_similar(l1,l2,lenght))
+        {
+            memo[l1][l2][lenght]=-1;
+            return false;
+        }
+        //依次检查从各个位置开始是否属于交错字符串
+        for (int i=1; i<lenght; ++i)
+        {
+            //判断是否属于前后对应的类型
+            if (dfs(l1,l2,i) && (l1+i,l2+i,lenght-i))
+            {
+                memo[l1][l2][lenght]=1;
+                return true;
+            }
+            //判断是否属于前后错位的类型
+            if(dfs(l1,l2+lenght-i,i) && dfs(l1+i,l2,lenght-i))
+            {
+                memo[l1][l2][lenght]=1;
+                return true;
+            }
+        }
+        memo[l1][l2][lenght]=-1;
+        return false;
+    }
+
+    bool isScramble(string s1, string s2) 
+    {
+        //memset 函数是内存赋值函数，用来给某一块内存空间进行赋值的。 其原型是：void* memset(void *_Dst, int  _Val, size_t _Size)
+        //_Dst是目标起始地址，_Val是要赋的值，_Size是要赋值的字节数。
+        std::memset(memo,0,sizeof(memo));
+        this->s1=s1;
+        this->s2=s2;
+        return dfs(0,0,s1.size());
     }
 };
