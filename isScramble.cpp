@@ -69,6 +69,14 @@ public:
     //分析s1从位置l1长度为length的子字符串和s2从位置l2开始长度为length的子字符串是否具有相同的元素
     bool check_if_similar(int l1, int l2, int length)
     {
+        // std::map<X, Y>实际储存了一串std::pair<const X, Y>
+        // std::map<std::string, int> m = /* fill it */;
+        // auto it = m.begin();
+        // 这里，如果你用*it，那么你将得到map第一个元素的std::pair：
+        // 现在你可以接收std::pair的两个元素：
+        // (*it).first会得到key，
+        // (*it).second会得到value。
+        // 这等同于it->first和it->second。
         unordered_map<int,int> freq;
         for (int i=l1; i<l1+length; ++i)
         {
