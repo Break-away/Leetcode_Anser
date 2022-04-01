@@ -26,6 +26,10 @@ public:
     }
     bool isBalanced(TreeNode* root) 
     {
-        return (treeheight(root->left)-treeheight(root->right))>=-1 && (treeheight(root->left)-treeheight(root->right))<=1;
+        if (root == nullptr) return true;
+        //子树也必须是bst；
+        return (treeheight(root->left)-treeheight(root->right))>=-1 && 
+        (treeheight(root->left)-treeheight(root->right))<=1 &&
+        isBalanced(root->left) && isBalanced(root->right);
     }
 };
