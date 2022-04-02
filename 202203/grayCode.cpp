@@ -62,7 +62,9 @@ public:
         ret.push_back(0);
         for (int i = 1; i <= n; i++) {
             int m = ret.size();
-            for (int j = m - 1; j >= 0; j--) {
+            for (int j = m - 1; j >= 0; j--) 
+            {
+                //在格雷编码的各个元素的首位加1，也是格雷编码
                 ret.push_back(ret[j] | (1 << (i - 1)));
             }
         }
